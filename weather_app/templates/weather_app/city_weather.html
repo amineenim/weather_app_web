@@ -1,0 +1,24 @@
+<h3 class="text-3xl font-bold underline mb-6 self-center">weather data</h3>
+{% if weather_data %}
+    <div class="self-center p-10 flex flex-col items-center">
+        <h1 class="text-2xl mb-6 underline">{{ weather_data.city }}</h1>
+        <h2>{{ weather_data.temperature }} Celsius</h2>
+        <p class="my-4">{{ weather_data.description }}</p>
+        <img src="http://openweathermap.org/img/w/{{ weather_data.icon }}.png" alt="{{weather_data.description}}"
+        width='60'>
+    </div>
+{% endif %}
+{% if forecast_data %}
+    <div class="flex items-center justify-between mt-10">
+        {% for forecast in forecast_data %}
+            <div class="flex flex-col items-center">
+                <h3>{{ forecast.day }}</h3>
+                <p> {{ forecast.min_temp }}C - {{ forecast.max_temp }}C</p>
+                <p>{{ forecast.description }}</p>
+                <p>{{ forecast.time }}</p>
+                <img src="http://openweathermap.org/img/w/{{ forecast.icon }}.png" alt={{forecast.description}}
+                width='80'>         
+            </div>
+        {% endfor %}
+    </div>
+{% endif %} 
