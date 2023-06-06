@@ -1,15 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <title>Weather App</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>
+        <link href="{% static 'fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
     </head>
     <body class="flex flex-col items-center p-10 bg-gray-200">
         <form method="POST" action="{% url 'home' %}" class="mb-10 p-6 w-1/2 flex justify-around">
             {% csrf_token %}
-            <input type="text" name="city" placeholder="enter a city name"
-            class="w-2/3 border rounded-xl py-2 pl-4">
+            <div class="flex w-2/3 items-center">
+                <i class="fa-solid fa-location-dot"></i>
+                <input type="text" name="city" placeholder="enter a city name"
+                class="w-full border rounded-xl py-2 pl-4 ml-3">
+            </div>
             <button type="submit"
             class="bg-gray-500 rounded-xl px-4 py-2 hover:bg-gray-700 hover:text-white">Apply</button>
         </form>

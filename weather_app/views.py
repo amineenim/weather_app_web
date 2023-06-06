@@ -8,6 +8,7 @@ from django.shortcuts import render
 def home(request) : 
     # read the API KEY 
     #API_KEY = open('API_KEY', 'r').read()
+   
     # the url to request to get weather data about now
     current_weather_url = 'https://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
     forecast_url = 'https://api.openweathermap.org/data/2.5/forecast?lat={}&lon={}&appid={}'
@@ -47,8 +48,10 @@ def fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url)
         "city" : city,
         "temperature" : round(response['main']['temp'] - 273.15, 2),
         "description" : response['weather'][0]['description'],
-        "icon" : response['weather'][0]['icon']
-    }
+        "icon" : response['weather'][0]['icon'],
+        "sunrise" : datetime.datetime.fromtimestamp(response['sys']['sunrise']).strftime("%H:%M"),
+        "sunset" : datetime.datetime.fromtimestamp(response['sys']['sunset']).strftime("%H:%M")
+    } 
     daily_forecast = []
     for daily_data in forecast_response['list'][:5] :
         daily_forecast.append({
