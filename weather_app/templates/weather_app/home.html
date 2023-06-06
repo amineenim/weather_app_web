@@ -17,6 +17,9 @@
         {% if weather_data %}
             {% include 'weather_app/city_weather.html' with weather_data=weather_data forecast_data=forecast_data %}
         {% endif %}
+        {% if error %}
+            {% include 'weather_app/city_weather.html' with error=error %}
+        {% endif %}
         </div>
     </body>
 </html>

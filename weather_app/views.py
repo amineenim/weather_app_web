@@ -8,7 +8,6 @@ from django.shortcuts import render
 def home(request) : 
     # read the API KEY 
     #API_KEY = open('API_KEY', 'r').read()
-    API_KEY = 'bb51fbca7cc3320091b1af2fd76966a5'
     # the url to request to get weather data about now
     current_weather_url = 'https://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
     forecast_url = 'https://api.openweathermap.org/data/2.5/forecast?lat={}&lon={}&appid={}'
@@ -20,10 +19,11 @@ def home(request) :
         # get the city submitted by user
         city = request.POST['city']
         # call the function that handles the data fetch 
-        weather_data, forecast_data = fetch_weather_and_forecast(city, API_KEY, current_weather_url, forecast_url)
+        weather_data, forecast_data, error = fetch_weather_and_forecast(city, API_KEY, current_weather_url, forecast_url)
         context = {
             'weather_data' : weather_data,
-            'forecast_data' : forecast_data
+            'forecast_data' : forecast_data,
+            'error' : error
         }
         return render(request, 'weather_app/home.html', context)       
 
@@ -32,12 +32,16 @@ def home(request) :
 def fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url) :
     # fetch the endpoint after formating the url with necessary params values
     response = requests.get(current_weather_url.format(city, api_key)).json()
+    # check if the return code from api is not 404 which corresponds to city not found
+    if response['cod'] == '404':
+        weather_data, daily_forecast = None, None
+        error = True
+        return weather_data, daily_forecast, error  
     # extract coordinates from the response object 
     longitude = response['coord']['lon']
     latitude = response['coord']['lat']
     # fetch for the forecast data 
     forecast_response = requests.get(forecast_url.format(latitude, longitude, api_key)).json()
-    print(forecast_response)
     # prepare dictionnary of wanted data
     weather_data = {
         "city" : city,
@@ -55,8 +59,8 @@ def fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url)
             "description" : daily_data['weather'][0]['description'],
             "icon" : daily_data['weather'][0]['icon']
         })
-
-    return weather_data, daily_forecast 
+    error = False 
+    return weather_data, daily_forecast, error
 
 
 
